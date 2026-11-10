@@ -1,0 +1,158 @@
+{
+  "status": "stopped_by_user",
+  "config": {
+    "max_length": 384,
+    "prompt_budget": 96,
+    "hidden_dim": 256,
+    "dropout": 0.2,
+    "encoder_lr": 2e-05,
+    "head_lr": 0.0003,
+    "weight_decay": 0.01,
+    "batch_size": 8,
+    "accumulation": 4,
+    "epochs": 5,
+    "patience": 2,
+    "warmup_fraction": 0.1,
+    "seed": 20260916
+  },
+  "completed_epochs": [
+    {
+      "epoch": 1,
+      "train_online_loss": 1.081515768593698,
+      "active_microbatch": 8,
+      "effective_batch": 32,
+      "skipped_amp_updates": 4,
+      "fit_probe": {
+        "log_loss": 1.0170277710399809,
+        "accuracy": 0.48193359375,
+        "brier_sum": 0.6103769652814207,
+        "per_class": {
+          "winner_model_a": {
+            "precision": 0.5082417582417582,
+            "recall": 0.5117565698478561,
+            "support": 723,
+            "f1": 0.5099931082012404
+          },
+          "winner_model_b": {
+            "precision": 0.501412429378531,
+            "recall": 0.5144927536231884,
+            "support": 690,
+            "f1": 0.5078683834048641
+          },
+          "winner_tie": {
+            "precision": 0.42810457516339867,
+            "recall": 0.4125984251968504,
+            "support": 635,
+            "f1": 0.42020850040096225
+          }
+        },
+        "count": 2048,
+        "macro_f1": 0.4793566640023556
+      },
+      "tune": {
+        "log_loss": 1.0284167104399684,
+        "accuracy": 0.47541340295909484,
+        "brier_sum": 0.6179590479406695,
+        "per_class": {
+          "winner_model_a": {
+            "precision": 0.48942598187311176,
+            "recall": 0.5091137649277184,
+            "support": 1591,
+            "f1": 0.4990757855822551
+          },
+          "winner_model_b": {
+            "precision": 0.4980793854033291,
+            "recall": 0.4927169094363521,
+            "support": 1579,
+            "f1": 0.49538363578478195
+          },
+          "winner_tie": {
+            "precision": 0.43292240754169686,
+            "recall": 0.41865357643758766,
+            "support": 1426,
+            "f1": 0.42566844919786095
+          }
+        },
+        "count": 4596,
+        "macro_f1": 0.473375956854966
+      },
+      "elapsed_seconds": 292.59025470679626
+    },
+    {
+      "epoch": 2,
+      "train_online_loss": 1.0110799776394852,
+      "active_microbatch": 8,
+      "effective_batch": 32,
+      "skipped_amp_updates": 0,
+      "fit_probe": {
+        "log_loss": 0.9570939639128361,
+        "accuracy": 0.537109375,
+        "brier_sum": 0.5693984440563659,
+        "per_class": {
+          "winner_model_a": {
+            "precision": 0.5506329113924051,
+            "recall": 0.6016597510373444,
+            "support": 723,
+            "f1": 0.575016523463318
+          },
+          "winner_model_b": {
+            "precision": 0.5454545454545454,
+            "recall": 0.591304347826087,
+            "support": 690,
+            "f1": 0.5674547983310152
+          },
+          "winner_tie": {
+            "precision": 0.503921568627451,
+            "recall": 0.4047244094488189,
+            "support": 635,
+            "f1": 0.44890829694323137
+          }
+        },
+        "count": 2048,
+        "macro_f1": 0.5304598729125215
+      },
+      "tune": {
+        "log_loss": 1.0152128111757384,
+        "accuracy": 0.48759791122715407,
+        "brier_sum": 0.6085124623188514,
+        "per_class": {
+          "winner_model_a": {
+            "precision": 0.49774774774774777,
+            "recall": 0.5556253928346951,
+            "support": 1591,
+            "f1": 0.5250965250965252
+          },
+          "winner_model_b": {
+            "precision": 0.49825783972125437,
+            "recall": 0.5433818872704244,
+            "support": 1579,
+            "f1": 0.5198424719781884
+          },
+          "winner_tie": {
+            "precision": 0.4544626593806922,
+            "recall": 0.349929873772791,
+            "support": 1426,
+            "f1": 0.3954041204437401
+          }
+        },
+        "count": 4596,
+        "macro_f1": 0.48011437250615124
+      },
+      "elapsed_seconds": 296.81815892178565
+    }
+  ],
+  "best_epoch": 2,
+  "best_tune_log_loss": 1.0152128111757384,
+  "parameter_count": 23702659,
+  "stop_metadata": {
+    "requested_by_user": true,
+    "stopped_at_utc": "2026-11-10T15:26:18.713585+00:00",
+    "completed_epochs": 2,
+    "interrupted_epoch": 3,
+    "preserved_resume_epoch": 2,
+    "reason": "User explicitly requested stopping training; no candidate refit/calibration/dev evaluation was performed."
+  },
+  "official_dev_loaded": false,
+  "final_refit_performed": false,
+  "new_dev_metrics_available": false
+}

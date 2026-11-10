@@ -4,17 +4,21 @@
 
 已执行的验收、实测小规模指标和全量资源状态见 [VALIDATION.md](VALIDATION.md)。
 
+**当前实验与复现总报告见 [REPROT.md](REPROT.md)。** 按用户要求已停止改进训练：18 次分类头容量/学习率实验已完成，联合编码微调完成两轮、第三轮中途停止，尚无改进候选的最终重训或新 dev 结果。公开聚合指标见 [results/](results/)，原始 CSV、模型缓存、含样本文本的产物及本地 Codex JSONL 不上传 GitHub。
+
+内部调参集的逐轮 Accuracy、Macro-F1、Log Loss 及同条件 fit/tune 评估已通过原配置重放补齐，见 [公开审计指标](results/tuning_audit_metrics.json)；本地完整记录为 [调参审计报告](artifacts-tuning-audit/REPORT.md)。实验方案见 [EXPERIMENTS.md](EXPERIMENTS.md)，实际完成与未完成范围以 REPROT.md 为准。
+
 训练方案包括 CPU 上的词级 TF-IDF 与逻辑回归，以及冻结 MiniLM、统计特征和小型 MLP 构成的语义分支。最终在训练集内部选择概率融合权重和温度，再统一评估官方 dev。
 
 ## 环境与运行状态
 
-本机检查结果为 Ryzen 7 5800H、8 核 16 线程、约 15.86 GiB 内存、RTX 3060 Laptop 6 GiB 显存，NVIDIA 驱动 546.30。已有 `mypytorch` 环境的 CUDA 张量运算验证通过，默认 Anaconda 的 PyTorch 为 CPU 版本。
+本次完整实验已在 Linux 服务器的 RTX 3090 上完成，使用 45,982 条 train 与 5,748 条 dev。正式 dev Log Loss：TF-IDF Baseline **1.050704936**、语义分支 **1.028195140**、校准融合 **1.022189513**。独立官方复算与模型重载验证均通过，详细对照及证据见 [VALIDATION.md](VALIDATION.md) 和 [REPORT.md](artifacts/REPORT.md)。
 
-项目环境使用 Python 3.11，主要依赖固定为 PyTorch 2.5.1＋CUDA 12.1、Transformers 4.48.3、Sentence Transformers 3.4.1、scikit-learn 1.6.1。完整直接依赖见 [requirements-training.txt](requirements-training.txt)，安装完成后生成 `requirements-lock.txt`，记录实际安装的全部版本。`torch==2.5.1` 同时支持本机 Conda CUDA 构建的版本元数据，实际 CUDA 版本由安装脚本验证。
+服务器独立 `.venv` 使用 Python 3.11.0、PyTorch 2.5.1+cu121、Transformers 4.48.3、Sentence Transformers 3.4.1、scikit-learn 1.6.1。跨平台直接依赖见 [requirements-training.txt](requirements-training.txt)，服务器实际依赖见 [requirements-lock-linux.txt](requirements-lock-linux.txt)。原 `requirements-lock.txt` 与 `environment-conda-explicit.txt` 保留原 Windows 环境记录。
 
 全量训练要求启动时可用内存至少 6 GiB，CUDA 模式另要求可用显存至少 2048 MiB。CPU 线程上限为 8，实验串行执行。资源不足时进程返回退出码 2，在 `run_state.json` 记录 `blocked_resources` 及原因，资源恢复后可重新执行同一命令。
 
-实现阶段的全量预检曾记录可用内存约 0.87 GiB。当前运行状态以 `artifacts/run_state.json` 及 `artifacts/metrics.json` 为准。`metrics.json` 中的 `smoke` 标记用于区分完整实验和小规模流程验证。
+当前运行状态为 `complete`，以 `artifacts/run_state.json` 及 `artifacts/metrics.json` 为准。原 Windows 内存不足记录作为历史保留在 VALIDATION.md。`metrics.json` 中的 `smoke` 标记用于区分完整实验和小规模流程验证。
 
 ## 安装与运行
 
@@ -46,6 +50,37 @@ python -m th02.run --data-dir data --output-dir artifacts --seed 20260916
 CUDA 运行需要兼容 CUDA 12.1 的 NVIDIA 驱动；CPU 运行时在命令末尾添加 `--device cpu`。首次训练会下载固定 revision 的 MiniLM 权重，离线服务器须预先准备模型并传入 `--model-path /path/to/model`。`requirements-training.txt` 固定跨平台直接依赖，`requirements-lock.txt` 和 Conda 显式锁记录原 Windows 验收环境；Linux 完成安装后可用 `python -m pip freeze` 保存该服务器的实际依赖版本。
 
 下文链接到 `artifacts/` 和 `artifacts-smoke*/` 的验收证据保留在本机，需单独传输或重新运行生成。
+
+### 当前 Linux 服务器入口
+
+服务器工作目录为 `/disk1/wuchufeng/th02-llm-judge`，独立环境为 `.venv`，模型为 `models/all-MiniLM-L6-v2`。模型下载脚本固定上述 MiniLM revision，并通过 Hugging Face 官方元数据中的 LFS SHA256 或 Git blob SHA1 校验文件。服务器实际安装版本单独保存为 `requirements-lock-linux.txt`。
+
+```bash
+cd /disk1/wuchufeng/th02-llm-judge
+source .venv/bin/activate
+python scripts/download_encoder.py
+sha256sum -c MANIFEST.sha256
+TH02_GPU=3 bash train_server.sh --preflight-only
+TH02_GPU=3 bash train_server.sh --smoke --output-dir artifacts-smoke-server
+TH02_GPU=3 bash train_server.sh
+python scripts/verify_training.py --data-dir data --output-dir artifacts
+```
+
+`TH02_GPU` 指定物理 GPU，默认值为 3，运行前使用 `nvidia-smi` 确认可用资源。预检通过当前 CUDA 逻辑设备的 UUID 查询显存，正确处理多卡环境的设备映射。所有实验串行执行，CPU 线程上限为 8。`train_server.sh` 会固定项目路径、模型路径、CUDA 设备、随机种子与缓存目录。
+
+服务器入口先通过 `scripts/run_server.py` 禁用当前进程的透明大页，并设置 `NUMPY_MADVISE_HUGEPAGE=0`，再加载原训练模块。首次全量尝试出现用户 CPU 时间长时间停滞、内核时间持续增加及宿主内存整理失败计数增长，疑似巨大页分配触发同步内存整理；该设置仅影响当前训练进程，不修改主机全局配置、模型或超参。调查记录保存在 `logs/thp-investigation.json`。
+
+需要关闭 SSH 后继续运行时，使用以下入口；不要在同一输出目录另起并发训练。
+
+```bash
+mkdir -p logs
+TH02_GPU=3 nohup bash train_server.sh > logs/full-training.log 2>&1 &
+tail -f logs/full-training.log
+```
+
+`scripts/verify_training.py` 使用标准库独立检查全量训练状态、数据及模型指纹、预测 ID 覆盖和概率合法性，再调用未修改的官方评分器复算八组结果，生成 `artifacts/verification.json`。ECE 和错误样本置信度仅作概率校准诊断，模型与校准配置仍只根据训练集内部数据选择。
+
+全量报告位于 `artifacts/REPORT.md`；自动错误候选需结合完整文本逐例核验，已复核材料使用 `artifacts/ERROR_ANALYSIS_REVIEWED.md`。下面的 Windows 记录描述迁移前环境，服务器正式结果以本次 `artifacts/metrics.json` 和 `artifacts/verification.json` 为准。
 
 ### 本机 Windows 环境
 
@@ -210,4 +245,4 @@ AI 使用材料见项目 `AI_USAGE.md`，需记录工具、用途、产出、采
 
 原始题目、数据、模板、`requirements.txt` 与评分文件通过 [MANIFEST.sha256](MANIFEST.sha256) 验证，工程新增内容独立于这些原始文件。
 
-本次小规模运行的逐例证据分析见 [ERROR_ANALYSIS_REVIEWED.md](artifacts-smoke-cuda/ERROR_ANALYSIS_REVIEWED.md)，包含 12 个案例及四类观测到的失败模式。完整实验生成对应错误候选后，按同样的证据核验流程完成其分析。
+本次完整实验的逐例证据分析见 [ERROR_ANALYSIS_REVIEWED.md](artifacts/ERROR_ANALYSIS_REVIEWED.md)，包含 12 个案例、具体原文差别、单例 Log Loss、实际截断位置及五类有案例支持的失败模式。原始自动候选保留在 `artifacts/error_cases.json`，最新复核状态见 `artifacts/error_review_status.json`。

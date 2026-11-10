@@ -1,0 +1,113 @@
+{
+  "purpose": "Improve classification accuracy while retaining the task's primary three-class Log Loss evaluation.",
+  "split_source": "artifacts/splits.json",
+  "split_seed": 20260916,
+  "head_train_seeds": [
+    20260916,
+    20260917,
+    20260918
+  ],
+  "encoder_train_seed": 20260916,
+  "official_dev_policy": "Already inspected in the prior experiment; no candidate or checkpoint selection using dev. Evaluate locked candidates together and disclose that it is not a new blind test.",
+  "head_capacity": {
+    "hidden_dimensions": [
+      [],
+      [
+        128
+      ],
+      [
+        512
+      ],
+      [
+        128,
+        128
+      ]
+    ],
+    "learning_rate": 0.001,
+    "max_epochs": 50,
+    "patience": 8,
+    "batch_size": 256,
+    "weight_decay": 0.0001,
+    "dropout_after_last_hidden_only": 0.2,
+    "swap_augmentation_probability": 0.5,
+    "selection": "Mean best held-out tune Log Loss across all three training seeds; also retain Accuracy-selected checkpoints separately."
+  },
+  "head_optimization": {
+    "learning_rates": [
+      0.001,
+      0.0003,
+      0.0001
+    ],
+    "reuse_completed_trials": true,
+    "conditional_scope": "Capacity winner; do not claim a global optimum across every architecture and optimizer.",
+    "scheduler_control": {
+      "type": "ReduceLROnPlateau",
+      "factor": 0.5,
+      "patience": 2,
+      "min_lr": 1e-06,
+      "three_seed_comparison": true
+    },
+    "ablations": [
+      "remove all 18 numeric/cosine features",
+      "remove training A/B swap; symmetric prediction remains"
+    ]
+  },
+  "task_encoder": {
+    "base_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "revision": "c9745ed1d9f207416be6d2e6f8de32d1f16199bf",
+    "inputs": "Shared encoder jointly encodes (prompt, answer_a) and (prompt, answer_b).",
+    "max_tokens_per_pair": 384,
+    "encoder_learning_rate": 2e-05,
+    "head_learning_rate": 0.0003,
+    "effective_batch_size": 32,
+    "max_epochs": 5,
+    "patience": 2,
+    "selection": "Best held-out tune Log Loss; preserve best-Accuracy checkpoint if available. Single-seed candidate with the limitation disclosed."
+  },
+  "final_refit": {
+    "indices": "fit+tune, 41400 rows",
+    "head_policy": "Use the chosen training configuration and predeclared median best epoch across seeds; average three seed models for an optional ensemble.",
+    "encoder_policy": "Use the fit-only selection's chosen epoch and original seed; do not use calibration or dev labels for fitting.",
+    "scheduler_policy": "Freeze the per-epoch median observed learning-rate schedule across seeds; never adjust final refit using tune or calibration labels.",
+    "encoder_parallel_policy": "After the candidate shows first-epoch held-out tune Log Loss <=1.03, a separate GPU may refit for the predeclared maximum 5 epochs and preserve every epoch. Select the final epoch only from the fit-only candidate tuning result; no choice using refit fit-probe, calibration or dev."
+  },
+  "calibration": {
+    "indices": "calibration, 4582 rows",
+    "probability_branches": [
+      "symmetric_tfidf",
+      "improved_frozen_head_nll_ensemble",
+      "improved_frozen_head_accuracy_ensemble_if_distinct",
+      "task_finetuned_encoder_selected_epoch"
+    ],
+    "simplex_weight_step": 0.25,
+    "temperatures": [
+      0.5,
+      0.75,
+      1.0,
+      1.25,
+      1.5,
+      2.0,
+      3.0
+    ],
+    "symmetric_tie_logit_offsets": [
+      -0.3,
+      -0.15,
+      0.0,
+      0.15,
+      0.3
+    ],
+    "primary_candidate": "Lowest calibration Log Loss; tie-break by higher Accuracy then smaller calibration adjustment.",
+    "accuracy_candidate": "Highest calibration Accuracy among candidates with Log Loss at most primary Log Loss + 0.005; tie-break by lower Log Loss.",
+    "lock_before_dev": true,
+    "report_both_without_post_dev_reselection": true
+  },
+  "metrics": [
+    "log_loss",
+    "accuracy",
+    "macro_f1",
+    "per_class_precision_recall_f1",
+    "brier_sum"
+  ],
+  "deliverable_directory": "/disk1/wuchufeng/C-TH-02",
+  "session_export": "Only the project's identified root Codex session and recursively related child sessions; raw JSONL snapshots at complete record boundaries with SHA256 manifest."
+}

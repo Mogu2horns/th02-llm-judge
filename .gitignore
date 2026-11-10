@@ -4,6 +4,14 @@ __pycache__/
 *.pyc
 artifacts/
 artifacts-smoke*/
+artifacts-tuning-audit/
+artifacts-improved-heads/
+artifacts-improved-encoder/
+artifacts-improved-encoder-smoke/
+artifacts-improved-final/
+logs/
+models/
+codex_sessions/
 
 # Assessment data must be transferred separately to an authorized server.
 data/*.csv

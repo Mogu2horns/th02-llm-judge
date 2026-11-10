@@ -1,0 +1,223 @@
+{
+  "status": "complete",
+  "smoke": false,
+  "seed": 20260916,
+  "train_count": 45982,
+  "dev_count": 5748,
+  "splits": {
+    "fit": 36804,
+    "tune": 4596,
+    "calibration": 4582,
+    "refit": 41400
+  },
+  "results": {
+    "prior": {
+      "log_loss": 1.0973518315443938,
+      "accuracy": 0.3533402922755741,
+      "brier_sum": 0.6658327313709501,
+      "per_class": {
+        "winner_model_a": {
+          "precision": 0.3533402922755741,
+          "recall": 1.0,
+          "support": 2031
+        },
+        "winner_model_b": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 1931
+        },
+        "winner_tie": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "support": 1786
+        }
+      },
+      "count": 5748,
+      "official_log_loss": 1.0973518315443394
+    },
+    "baseline": {
+      "log_loss": 1.050704936133006,
+      "accuracy": 0.4509394572025052,
+      "brier_sum": 0.6331103034894622,
+      "per_class": {
+        "winner_model_a": {
+          "precision": 0.4718279569892473,
+          "recall": 0.5401280157557853,
+          "support": 2031
+        },
+        "winner_model_b": {
+          "precision": 0.441785549930971,
+          "recall": 0.4971517348524081,
+          "support": 1931
+        },
+        "winner_tie": {
+          "precision": 0.428,
+          "recall": 0.29955207166853304,
+          "support": 1786
+        }
+      },
+      "count": 5748,
+      "official_log_loss": 1.0507049361330025
+    },
+    "baseline_calibrated": {
+      "log_loss": 1.0514445242535615,
+      "accuracy": 0.4509394572025052,
+      "brier_sum": 0.6324853982329931,
+      "per_class": {
+        "winner_model_a": {
+          "precision": 0.4718279569892473,
+          "recall": 0.5401280157557853,
+          "support": 2031
+        },
+        "winner_model_b": {
+          "precision": 0.441785549930971,
+          "recall": 0.4971517348524081,
+          "support": 1931
+        },
+        "winner_tie": {
+          "precision": 0.428,
+          "recall": 0.29955207166853304,
+          "support": 1786
+        }
+      },
+      "count": 5748,
+      "official_log_loss": 1.0514445242535628
+    },
+    "symmetric_baseline": {
+      "log_loss": 1.0453756685249032,
+      "accuracy": 0.4650313152400835,
+      "brier_sum": 0.6293514475466174,
+      "per_class": {
+        "winner_model_a": {
+          "precision": 0.48401420959147423,
+          "recall": 0.5366814377154111,
+          "support": 2031
+        },
+        "winner_model_b": {
+          "precision": 0.45964432284541723,
+          "recall": 0.5220093215950284,
+          "support": 1931
+        },
+        "winner_tie": {
+          "precision": 0.44128933231005374,
+          "recall": 0.3219484882418813,
+          "support": 1786
+        }
+      },
+      "count": 5748,
+      "official_log_loss": 1.0453756685249087
+    },
+    "symmetric_baseline_calibrated": {
+      "log_loss": 1.0422991512003301,
+      "accuracy": 0.4650313152400835,
+      "brier_sum": 0.6260867852295614,
+      "per_class": {
+        "winner_model_a": {
+          "precision": 0.48401420959147423,
+          "recall": 0.5366814377154111,
+          "support": 2031
+        },
+        "winner_model_b": {
+          "precision": 0.45964432284541723,
+          "recall": 0.5220093215950284,
+          "support": 1931
+        },
+        "winner_tie": {
+          "precision": 0.44128933231005374,
+          "recall": 0.3219484882418813,
+          "support": 1786
+        }
+      },
+      "count": 5748,
+      "official_log_loss": 1.0422991512003315
+    },
+    "semantic": {
+      "log_loss": 1.028195139694122,
+      "accuracy": 0.4737299930410578,
+      "brier_sum": 0.6171734032623593,
+      "per_class": {
+        "winner_model_a": {
+          "precision": 0.4945155393053016,
+          "recall": 0.5327424913835549,
+          "support": 2031
+        },
+        "winner_model_b": {
+          "precision": 0.46634824142422926,
+          "recall": 0.5561885033661316,
+          "support": 1931
+        },
+        "winner_tie": {
+          "precision": 0.4510739856801909,
+          "recall": 0.31746920492721165,
+          "support": 1786
+        }
+      },
+      "count": 5748,
+      "official_log_loss": 1.0281951396941218
+    },
+    "fusion": {
+      "log_loss": 1.0255649466352437,
+      "accuracy": 0.4815588030619346,
+      "brier_sum": 0.6153556325774587,
+      "per_class": {
+        "winner_model_a": {
+          "precision": 0.5059306569343066,
+          "recall": 0.5460364352535697,
+          "support": 2031
+        },
+        "winner_model_b": {
+          "precision": 0.4703334776959723,
+          "recall": 0.5624029000517866,
+          "support": 1931
+        },
+        "winner_tie": {
+          "precision": 0.4595028067361668,
+          "recall": 0.32082866741321386,
+          "support": 1786
+        }
+      },
+      "count": 5748,
+      "official_log_loss": 1.0255649466352452
+    },
+    "fusion_calibrated": {
+      "log_loss": 1.022189513294764,
+      "accuracy": 0.4815588030619346,
+      "brier_sum": 0.6124575401034626,
+      "per_class": {
+        "winner_model_a": {
+          "precision": 0.5059306569343066,
+          "recall": 0.5460364352535697,
+          "support": 2031
+        },
+        "winner_model_b": {
+          "precision": 0.4703334776959723,
+          "recall": 0.5624029000517866,
+          "support": 1931
+        },
+        "winner_tie": {
+          "precision": 0.4595028067361668,
+          "recall": 0.32082866741321386,
+          "support": 1786
+        }
+      },
+      "count": 5748,
+      "official_log_loss": 1.0221895132947623
+    }
+  },
+  "calibration": {
+    "baseline_temperature": 0.75,
+    "symmetric_baseline_temperature": 0.75,
+    "alpha": 0.5,
+    "temperature": 0.75,
+    "baseline_log_loss": 1.0372707395452783,
+    "symmetric_baseline_log_loss": 1.029131734293392,
+    "fused_log_loss": 1.0075815817794564
+  },
+  "timings": {
+    "baseline_seconds": 240.56403926108032,
+    "semantic_train_seconds": 394.30963554559276,
+    "dev_seconds": 51.695005415938795,
+    "total_seconds": 748.6254366538487
+  },
+  "official_rescoring": "passed; tolerance 1e-12"
+}

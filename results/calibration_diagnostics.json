@@ -1,0 +1,70 @@
+{
+  "source": "independent official prediction verification",
+  "diagnostic_note": "ECE uses 10 fixed confidence bins [0,.1), ... [.9,1]; auxiliary diagnostics do not select hyperparameters or replace Log Loss.",
+  "experiments": {
+    "prior": {
+      "official_log_loss": 1.0973518315443394,
+      "accuracy": 0.35334029227557406,
+      "mean_confidence": 0.3480274890173978,
+      "confidence_ece_10_bins": 0.005312803258176346,
+      "error_count": 3717,
+      "error_mean_confidence": 0.3480274890174291
+    },
+    "baseline": {
+      "official_log_loss": 1.0507049361330025,
+      "accuracy": 0.45093945720250517,
+      "mean_confidence": 0.43139997473610053,
+      "confidence_ece_10_bins": 0.019539482466404672,
+      "error_count": 3156,
+      "error_mean_confidence": 0.4197439085715775
+    },
+    "baseline_calibrated": {
+      "official_log_loss": 1.0514445242535628,
+      "accuracy": 0.45093945720250517,
+      "mean_confidence": 0.4628420410508357,
+      "confidence_ece_10_bins": 0.019991268475004518,
+      "error_count": 3156,
+      "error_mean_confidence": 0.4478685810510459
+    },
+    "symmetric_baseline": {
+      "official_log_loss": 1.0453756685249087,
+      "accuracy": 0.46503131524008345,
+      "mean_confidence": 0.422366613732157,
+      "confidence_ece_10_bins": 0.04266470150792648,
+      "error_count": 3075,
+      "error_mean_confidence": 0.40991989107151344
+    },
+    "symmetric_baseline_calibrated": {
+      "official_log_loss": 1.0422991512003315,
+      "accuracy": 0.46503131524008345,
+      "mean_confidence": 0.4509007225470235,
+      "confidence_ece_10_bins": 0.026606781031796683,
+      "error_count": 3075,
+      "error_mean_confidence": 0.4348092364840271
+    },
+    "semantic": {
+      "official_log_loss": 1.0281951396941218,
+      "accuracy": 0.4737299930410578,
+      "mean_confidence": 0.4874912526906637,
+      "confidence_ece_10_bins": 0.013761259649605293,
+      "error_count": 3025,
+      "error_mean_confidence": 0.46282083718061495
+    },
+    "fusion": {
+      "official_log_loss": 1.0255649466352452,
+      "accuracy": 0.48155880306193455,
+      "mean_confidence": 0.44697812175164525,
+      "confidence_ece_10_bins": 0.03458068131028837,
+      "error_count": 2980,
+      "error_mean_confidence": 0.4282483183315785
+    },
+    "fusion_calibrated": {
+      "official_log_loss": 1.0221895132947623,
+      "accuracy": 0.48155880306193455,
+      "mean_confidence": 0.4831723168381218,
+      "confidence_ece_10_bins": 0.009877571813895262,
+      "error_count": 2980,
+      "error_mean_confidence": 0.4592562317523297
+    }
+  }
+}

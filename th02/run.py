@@ -104,15 +104,28 @@ def inspect_resources() -> dict:
         "platform": platform.platform(),
     }
     try:
+        import torch
+
+        if not torch.cuda.is_available():
+            raise RuntimeError("CUDA is unavailable or no CUDA devices are visible")
+        logical_index = torch.cuda.current_device()
+        # CUDA may enumerate devices differently from nvidia-smi, especially on a
+        # mixed-GPU server. UUIDs identify the actual selected CUDA device.
+        device_uuid = str(torch.cuda.get_device_properties(logical_index).uuid)
+        if not device_uuid.startswith(("GPU-", "MIG-")):
+            device_uuid = "GPU-" + device_uuid
         process = subprocess.run(
-            ["nvidia-smi", "--query-gpu=name,memory.total,memory.free,driver_version",
+            ["nvidia-smi", "-i", device_uuid,
+             "--query-gpu=name,memory.total,memory.free,driver_version",
              "--format=csv,noheader,nounits"],
             capture_output=True, text=True, check=True, timeout=15,
         )
         name, total, free, driver = next(csv.reader(process.stdout.splitlines()))
         result["gpu"] = {"name": name.strip(), "memory_total_mib": float(total),
-                         "memory_free_mib": float(free), "driver": driver.strip()}
-    except (OSError, subprocess.SubprocessError, ValueError, StopIteration) as error:
+                         "memory_free_mib": float(free), "driver": driver.strip(),
+                         "uuid": device_uuid, "logical_index": logical_index}
+    except (ImportError, AttributeError, RuntimeError, OSError,
+            subprocess.SubprocessError, ValueError, StopIteration) as error:
         result["gpu_error"] = str(error)
     return result
 
@@ -171,7 +184,10 @@ def run_experiment(args, output: Path, resources: dict, manifest: list[dict]) ->
     from .semantic import encode_samples, train_semantic
 
     if args.device == "cuda" and not torch.cuda.is_available():
-        raise RuntimeError("CUDA is unavailable. Run setup.ps1 to install the locked CUDA environment.")
+        raise RuntimeError(
+            "CUDA is unavailable. Install the CUDA-enabled training dependencies "
+            "and check GPU access, or run with --device cpu."
+        )
     resources["torch"] = torch.__version__
     resources["torch_cuda"] = torch.version.cuda
     configure_randomness(args.seed)
