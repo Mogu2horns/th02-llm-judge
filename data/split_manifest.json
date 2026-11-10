@@ -1,0 +1,29 @@
+{
+  "version": "1.0",
+  "seed": 20260916,
+  "group_key": "sha256(normalized prompt + response_a + response_b)",
+  "source_sha256": "c8d1fb72e37321787a66dead67468d3635e1e64414aa8c8915fb5d624b5b9690",
+  "counts": {
+    "train": 45982,
+    "dev": 5748,
+    "private": 5747
+  },
+  "labels": {
+    "train": {
+      "winner_model_b": 15781,
+      "winner_model_a": 16003,
+      "winner_tie": 14198
+    },
+    "dev": {
+      "winner_model_a": 2031,
+      "winner_tie": 1786,
+      "winner_model_b": 1931
+    },
+    "private": {
+      "winner_model_b": 1940,
+      "winner_tie": 1777,
+      "winner_model_a": 2030
+    }
+  },
+  "note": "Exact duplicate content groups never cross splits. Original model_a/model_b metadata is excluded from all candidate-facing tables."
+}

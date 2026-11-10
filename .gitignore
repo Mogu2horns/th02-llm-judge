@@ -1,0 +1,16 @@
+.venv/
+.cache/
+__pycache__/
+*.pyc
+artifacts/
+artifacts-smoke*/
+
+# Assessment data must be transferred separately to an authorized server.
+data/*.csv
+
+# Local credentials and environment settings.
+.env
+.env.*
+!.env.example
+*.pem
+*.key

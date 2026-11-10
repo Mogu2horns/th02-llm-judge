@@ -1,0 +1,12 @@
+# Keep repository text portable across Windows and Linux.
+* text=auto eol=lf
+
+# The supplied files are verified byte-for-byte by MANIFEST.sha256.
+/C-TH-02-LLM回答偏好预测-候选人题目说明.md -text
+/data/*.csv -text
+/data/split_manifest.json -text
+/evaluation/metric.py -text
+/requirements.txt -text
+/templates/AI_USAGE_TEMPLATE.md -text
+/templates/REPORT_TEMPLATE.md -text
+/MANIFEST.sha256 -text
